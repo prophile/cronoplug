@@ -7,3 +7,7 @@ install:
   - python setup.py
 script:
   - nosetests
+notifications:
+  hipchat:
+    secure: "CPPF2kVbOuEouvF00MqFWPGFZIWMjpo8wpfFNtiwZn0EQeBDBBaPCHID9YysIBzgC7+fgkIRrSFOwZUIThpI2ex721fCE4MJyKiwthM+MRR5/sKFCytpvPCGTVpv+1i/R5X0kEaJzDDj/KXkPI4ZXwNXov/kDBVYfXF4vCtBoUc="
+
