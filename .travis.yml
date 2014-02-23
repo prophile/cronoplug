@@ -1,13 +1,20 @@
 language: python
 python:
-  - "3.2"
-  - "3.3"
+- '3.2'
+- '3.3'
 install:
-  - pip install -r requirements.txt
-  - python setup.py install
+- pip install -r requirements.txt
+- python setup.py install
 script:
-  - nosetests
+- nosetests
 notifications:
   hipchat:
-    secure: "CPPF2kVbOuEouvF00MqFWPGFZIWMjpo8wpfFNtiwZn0EQeBDBBaPCHID9YysIBzgC7+fgkIRrSFOwZUIThpI2ex721fCE4MJyKiwthM+MRR5/sKFCytpvPCGTVpv+1i/R5X0kEaJzDDj/KXkPI4ZXwNXov/kDBVYfXF4vCtBoUc="
-
+    secure: CPPF2kVbOuEouvF00MqFWPGFZIWMjpo8wpfFNtiwZn0EQeBDBBaPCHID9YysIBzgC7+fgkIRrSFOwZUIThpI2ex721fCE4MJyKiwthM+MRR5/sKFCytpvPCGTVpv+1i/R5X0kEaJzDDj/KXkPI4ZXwNXov/kDBVYfXF4vCtBoUc=
+deploy:
+  provider: pypi
+  user: alynn
+  password:
+    secure: CLysbVhFjyYniKLpwgMUEtzDJSsB2xT88BiK9km3ARVo2DBawI6DZwadDc/0lZRjU6SThkFdwuVyzKJTkjjdALI50m4fQxBdudhcKyPKU7SvgQ2oEcX5dUmspGOFPcK1CSKpE20kuwEsZUUejoI5uc7VMgADg6WFQmInlCoPs+c=
+  on:
+    tags: true
+    repo: prophile/cronoplug
