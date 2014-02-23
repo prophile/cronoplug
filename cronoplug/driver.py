@@ -1,12 +1,22 @@
 """Main driver implementation."""
 
 from docopt import docopt
+from os.path import basename
 
-def cronoplug(args):
-    """Usage: cronoplug --bees"""
+def generate_plugin(src, dst, plugin_name):
+    pass
+
+def cronoplug(args, generate = generate_plugin):
+    """Usage: cronoplug [options] <src> <dst>
+
+    -n, --name <name>   Plugin name"""
     arguments = docopt(cronoplug.__doc__, args)
-    if arguments['--bees']:
-        print("Covered in bees.")
+    srcdir = arguments['<src>']
+    dstfile = arguments['<dst>']
+    plgname = arguments['--name']
+    if plgname is None:
+        plgname = basename(srcdir)
+    generate(srcdir, dstfile, plgname)
 
 if __name__ == '__main__':
     from sys import argv
