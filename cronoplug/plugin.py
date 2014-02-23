@@ -31,7 +31,10 @@ class Plugin:
         manifest_src = self._src('manifest.yaml')
         if manifest_src is None:
             raise KeyError("No manifest found")
-        data = yaml.load(manifest_src)
+        try:
+            data = yaml.load(manifest_src)
+        except yaml.parser.ParserError:
+            raise ValueError("Bad manifest file")
         files = data["files"]
         for fn in files:
             self.import_file(fn)

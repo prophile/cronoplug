@@ -57,3 +57,17 @@ files:
         content = f.read()
         assert content == "Covered in bees.".encode('utf-8')
 
+@raises(KeyError)
+def test_import_no_mfest():
+    bio = io.BytesIO()
+    with Plugin(bio, "Test Plugin", lambda x: None) as plg:
+        plg.import_from_manifest()
+
+@raises(ValueError)
+def test_import_bad_mfest():
+    bio = io.BytesIO()
+    manifest = "["
+    manifestsrc = io.BytesIO(manifest.encode('utf-8'))
+    with Plugin(bio, "Test Plugin", lambda x: manifestsrc) as plg:
+        plg.import_from_manifest()
+
