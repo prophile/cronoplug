@@ -1,5 +1,6 @@
 import zipfile
 import io
+import yaml
 
 class Plugin:
     def __init__(self, stream, name, source = lambda x: None):
@@ -25,6 +26,15 @@ class Plugin:
         if content is None:
             raise KeyError("No file {}".format(name))
         self.add_file(name, self._src(name))
+
+    def import_from_manifest(self):
+        manifest_src = self._src('manifest.yaml')
+        if manifest_src is None:
+            raise KeyError("No manifest found")
+        data = yaml.load(manifest_src)
+        files = data["files"]
+        for fn in files:
+            self.import_file(fn)
 
     def __exit__(self, type, value, traceback):
         if not self._wrote_main:

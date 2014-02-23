@@ -39,3 +39,21 @@ def test_source_error():
     with Plugin(bio, "Test Plugin", lambda f: None) as plg:
         plg.import_file('pony.txt')
 
+def test_import_from_mfest():
+    bio = io.BytesIO()
+    manifest = """
+files:
+  - bees.txt
+"""
+    manifestsrc = io.BytesIO(manifest.encode('utf-8'))
+    beessrc = io.BytesIO("Covered in bees.".encode('utf-8'))
+    def get_file(x):
+        return {"manifest.yaml": manifestsrc,
+                "bees.txt": beessrc}.get(x, None)
+    with Plugin(bio, "Test Plugin", get_file) as plg:
+        plg.import_from_manifest()
+    zp = zipfile.ZipFile(bio, 'r')
+    with zp.open('bees.txt') as f:
+        content = f.read()
+        assert content == "Covered in bees.".encode('utf-8')
+
