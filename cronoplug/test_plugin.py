@@ -4,6 +4,7 @@ from cronoplug.plugin import Plugin, from_fs
 
 import io
 import zipfile
+import json
 
 import tempfile
 
@@ -17,13 +18,24 @@ def test_base():
         content = f.read()
         assert content == b'I am covered in bees.'
 
+def test_auto_main():
+    bio = io.BytesIO()
+    with Plugin(bio, "Test Plugin") as plg:
+        pass
+    zp = zipfile.ZipFile(bio, 'r')
+    with zp.open('main.lua') as f:
+        content = f.read()
+        assert content == b''
+
 def test_info():
     bio = io.BytesIO()
     with Plugin(bio, "Test Plugin") as plg:
         pass
     zp = zipfile.ZipFile(bio, 'r')
-    info = zp.getinfo('main.lua')
-    assert info.comment == b"Test Plugin"
+    with zp.open('info.json') as f:
+        content = f.read()
+        data = json.loads(content.decode('utf-8'))
+        assert data['name'] == "Test Plugin"
 
 def test_source():
     bio = io.BytesIO()

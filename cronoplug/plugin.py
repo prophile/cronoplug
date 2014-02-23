@@ -1,6 +1,7 @@
 import zipfile
 import io
 import yaml
+import json
 
 def from_fs(base_path):
     def get(filename):
@@ -12,8 +13,9 @@ class Plugin:
     def __init__(self, stream, name, source = lambda x: None):
         self.file = zipfile.ZipFile(stream, 'w')
         self._wrote_main = False
-        self.name = name
         self._src = source
+        info_dict = {'name': name}
+        self.add_file('info.json', json.dumps(info_dict).encode('utf-8'))
 
     def __enter__(self):
         return self
@@ -22,7 +24,6 @@ class Plugin:
         info = zipfile.ZipInfo(filename=name)
         if name == 'main.lua':
             self._wrote_main = True
-            info.comment = self.name.encode('utf-8')
         if isinstance(content, io.IOBase):
             content = content.read()
         self.file.writestr(info, content)
