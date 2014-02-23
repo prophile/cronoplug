@@ -1,3 +1,5 @@
+from nose.tools import *
+
 from cronoplug.plugin import Plugin
 
 import io
@@ -20,4 +22,20 @@ def test_info():
     zp = zipfile.ZipFile(bio, 'r')
     info = zp.getinfo('main.lua')
     assert info.comment == b"Test Plugin"
+
+def test_source():
+    bio = io.BytesIO()
+    src = io.BytesIO(b"I'm on a boat")
+    with Plugin(bio, "Test Plugin", lambda f: src) as plg:
+        plg.import_file('boat.txt')
+    zp = zipfile.ZipFile(bio, 'r')
+    with zp.open('boat.txt') as f:
+        content = f.read()
+        assert content == b"I'm on a boat"
+
+@raises(KeyError)
+def test_source_error():
+    bio = io.BytesIO()
+    with Plugin(bio, "Test Plugin", lambda f: None) as plg:
+        plg.import_file('pony.txt')
 
