@@ -13,7 +13,7 @@ class Plugin:
         info = zipfile.ZipInfo(filename=name)
         if name == 'main.lua':
             self._wrote_main = True
-            info.comment = self.name
+            info.comment = self.name.encode('utf-8')
         self.file.writestr(info, content)
 
     def __exit__(self, type, value, traceback):
