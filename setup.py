@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name='Cronoplug',
-      version='0.0.1',
+      version='0.0.2',
       description='Cronoplug packer',
       author='Alistair Lynn',
       author_email='arplynn@gmail.com',
