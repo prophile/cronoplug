@@ -3,8 +3,12 @@
 from docopt import docopt
 from os.path import basename
 
+from . import plugin
+
 def generate_plugin(src, dst, plugin_name):
-    pass
+    with open(dst, 'wb') as f:
+        with plugin.Plugin(f, plugin_name, plugin.from_fs(src)) as plg:
+            plg.import_from_manifest()
 
 def cronoplug(args, generate = generate_plugin):
     """Usage: cronoplug [options] <src> <dst>
