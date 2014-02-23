@@ -1,9 +1,11 @@
 from nose.tools import *
 
-from cronoplug.plugin import Plugin
+from cronoplug.plugin import Plugin, from_fs
 
 import io
 import zipfile
+
+import tempfile
 
 def test_base():
     bio = io.BytesIO()
@@ -70,4 +72,23 @@ def test_import_bad_mfest():
     manifestsrc = io.BytesIO(manifest.encode('utf-8'))
     with Plugin(bio, "Test Plugin", lambda x: manifestsrc) as plg:
         plg.import_from_manifest()
+
+def test_import_fs():
+    manifestcontents = """
+files:
+  - eyes.txt
+"""
+    with tempfile.TemporaryDirectory() as dpath:
+        with open("{}/manifest.yaml".format(dpath), 'w') as f:
+            f.write(manifestcontents)
+        with open("{}/eyes.txt".format(dpath), 'w') as f:
+            f.write("Death gravy.")
+        bio = io.BytesIO()
+        with Plugin(bio, "Test Plugin", from_fs(dpath)) as plg:
+            plg.import_from_manifest()
+        zp = zipfile.ZipFile(bio, 'r')
+        with zp.open('eyes.txt') as f:
+            content = f.read()
+            assert content == "Death gravy.".encode('utf-8')
+
 

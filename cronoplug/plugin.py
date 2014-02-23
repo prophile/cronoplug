@@ -2,6 +2,12 @@ import zipfile
 import io
 import yaml
 
+def from_fs(base_path):
+    def get(filename):
+        full_path = "{}/{}".format(base_path, filename)
+        return open(full_path, 'rb')
+    return get
+
 class Plugin:
     def __init__(self, stream, name, source = lambda x: None):
         self.file = zipfile.ZipFile(stream, 'w')
